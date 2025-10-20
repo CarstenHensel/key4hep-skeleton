@@ -1,5 +1,5 @@
 file(GLOB _plugin_sources src/components/*.cpp)
-gaudi_add_module(k4ProjectTemplatePlugins
+gaudi_add_module(skeletonPlugins
                  SOURCES ${_plugin_sources}
                  LINK Gaudi::GaudiKernel
                       k4FWCore::k4FWCore
