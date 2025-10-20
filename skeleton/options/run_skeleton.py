@@ -10,6 +10,25 @@ from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
 from k4FWCore.parseArgs import parser
 
+
+# -------------------------------------------------------------------------
+# Helper function
+# -------------------------------------------------------------------------
+def make_converter_pair(name_prefix, edm_map, lcio_map):
+    """Create a pair of EDM4hep2LcioTool and Lcio2EDM4hepTool with consistent naming."""
+    edm = EDM4hep2LcioTool(f"EDM2LCIO_{name_prefix}")
+    edm.convertAll = False
+    edm.collNameMapping = edm_map
+
+    lcio = Lcio2EDM4hepTool(f"LCIO2EDM_{name_prefix}")
+    lcio.convertAll = False
+    lcio.collNameMapping = lcio_map
+
+    return edm, lcio
+
+
+
+
 inputFiles = [] #TODO: add input files 
 
 # setting up the input
@@ -54,35 +73,33 @@ myJetFinder.Parameters = {
 myJetFinder.OutputLevel = INFO
 
 
-e2lConv = EDM4hep2LcioTool("EDM4hep2Lcio")
-l2eConv = Lcio2EDM4hepTool("Lcio2EDM4hep")
-e2lConv.convertAll = False
-e2lConv.collNameMapping = {
-        'PrimaryVertex':'PrimaryVertex',
-        'PandoraPFOs':'PandoraPFOs',
-        "PandoraClusters": "PandoraClusters",
-        "MarlinTrkTracks": "MarlinTrkTracks",
-        "EventHeader": "EventHeader",
-        "MCParticlesSkimmed": "MCParticlesSkimmed"
-        }
-
-
-l2eConv.convertAll = False
-l2eConv.collNameMapping = {
-     'PandoraPFOs': 'PandoraPFOs',
-     'MyJets': 'MyJets',
-     'PFOsFromJets': 'PFOsFromJets',
-     "PandoraClusters": "PandoraClusters",
-     "MarlinTrkTracks": "MarlinTrkTracks",
-     "EventHeader": "EventHeader",
-     "MCParticlesSkimmed": "MCParticlesSkimmed"
+# Define collection mappings for JetFinder
+edm_map_jet = {
+    "PrimaryVertex": "PrimaryVertex",
+    "PandoraPFOs": "PandoraPFOs",
+    "PandoraClusters": "PandoraClusters",
+    "MarlinTrkTracks": "MarlinTrkTracks",
+    "EventHeader": "EventHeader",
+    "MCParticlesSkimmed": "MCParticlesSkimmed",
 }
 
-e2lConv.OutputLevel = INFO
-l2eConv.OutputLevel = INFO
+lcio_map_jet = {
+    "PandoraPFOs": "PandoraPFOs",
+    "MyJets": "MyJets",
+    "PFOsFromJets": "PFOsFromJets",
+    "PandoraClusters": "PandoraClusters",
+    "MarlinTrkTracks": "MarlinTrkTracks",
+    "EventHeader": "EventHeader",
+    "MCParticlesSkimmed": "MCParticlesSkimmed",
+}
 
-myJetFinder.EDM4hep2LcioTool = e2lConv
-myJetFinder.Lcio2EDM4hepTool = l2eConv
+# Create and attach converter pair
+edm2lcio_jet, lcio2edm_jet = make_converter_pair("JetFinder", edm_map_jet, lcio_map_jet)
+myJetsetFinder.EDM4hep2LcioTool = edm2lcio_jet
+myJetFinder.Lcio2EDM4hepTool = lcio2edm_jet
+
+
+
 
 
 # Isolated Lepton Processor
@@ -116,33 +133,32 @@ myIsolatedLeptonTaggingProcessor.Parameters = {
                                                }
 
 
-edm4hep2LcioConv = EDM4hep2LcioTool("EDM4hep2Lcio")
-lcio2edm4hepConv = Lcio2EDM4hepTool("Lcio2EDM4hep")
-edm4hep2LcioConv.convertAll = False
-edm4hep2LcioConv.collNameMapping = {
-        'PrimaryVertex':'PrimaryVertex',
-        'PandoraPFOs':'PandoraPFOs',
-        "PandoraClusters": "PandoraClusters",
-        "MarlinTrkTracks": "MarlinTrkTracks",
-        "EventHeader": "EventHeader"
-      }
 
 
-lcio2edm4hepConv.convertAll = False
-lcio2edm4hepConv.collNameMapping = {
-     'PandoraPFOs': 'PandoraPFOs',
-     'IsolatedLeptons': 'IsolatedLeptons',
-     'PandoraPFOsWithoutIsoLep': 'PandoraPFOsWithoutIsoLep',
-     "PandoraClusters": "PandoraClusters",
-     "MarlinTrkTracks": "MarlinTrkTracks",
-     "EventHeader": "EventHeader",
-     "MCParticlesSkimmed": "MCParticlesSkimmed",
-     'MyJets': 'MyJets'
-     }
+# Define collection mappings for IsoLeptonTagger
+edm_map_iso = {
+    "PrimaryVertex": "PrimaryVertex",
+    "PandoraPFOs": "PandoraPFOs",
+    "PandoraClusters": "PandoraClusters",
+    "MarlinTrkTracks": "MarlinTrkTracks",
+    "EventHeader": "EventHeader",
+}
 
-#MyIsolatedLeptonTaggingProcessor.EDM4hep2LcioTool = edm4hep2LcioConv
-MyIsolatedLeptonTaggingProcessor.Lcio2EDM4hepTool = lcio2edm4hepConv
+lcio_map_iso = {
+    "PandoraPFOs": "PandoraPFOs",
+    "IsolatedLeptons": "IsolatedLeptons",
+    "PandoraPFOsWithoutIsoLep": "PandoraPFOsWithoutIsoLep",
+    "PandoraClusters": "PandoraClusters",
+    "MarlinTrkTracks": "MarlinTrkTracks",
+    "EventHeader": "EventHeader",
+    "MCParticlesSkimmed": "MCParticlesSkimmed",
+    "MyJets": "MyJets",
+}
 
+# Create and attach converter pair
+edm2lcio_iso, lcio2edm_iso = make_converter_pair("IsoLeptonTagger", edm_map_iso, lcio_map_iso)
+myIsolatedLeptonTaggingProcessor.Lcio2EDM4hepTool = lcio2edm_iso
+myIsolatedLeptonTaggingProcessor.EDM4hep2LcioTool = edm2lcio_iso   
 
 
 
