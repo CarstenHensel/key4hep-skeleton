@@ -54,6 +54,36 @@ myJetFinder.Parameters = {
 myJetFinder.OutputLevel = INFO
 
 
+e2lConv = EDM4hep2LcioTool("EDM4hep2Lcio")
+l2eConv = Lcio2EDM4hepTool("Lcio2EDM4hep")
+e2lConv.convertAll = False
+e2lConv.collNameMapping = {
+        'PrimaryVertex':'PrimaryVertex',
+        'PandoraPFOs':'PandoraPFOs',
+        "PandoraClusters": "PandoraClusters",
+        "MarlinTrkTracks": "MarlinTrkTracks",
+        "EventHeader": "EventHeader",
+        "MCParticlesSkimmed": "MCParticlesSkimmed"
+        }
+
+
+l2eConv.convertAll = False
+l2eConv.collNameMapping = {
+     'PandoraPFOs': 'PandoraPFOs',
+     'MyJets': 'MyJets',
+     'PFOsFromJets': 'PFOsFromJets',
+     "PandoraClusters": "PandoraClusters",
+     "MarlinTrkTracks": "MarlinTrkTracks",
+     "EventHeader": "EventHeader",
+     "MCParticlesSkimmed": "MCParticlesSkimmed"
+}
+
+e2lConv.OutputLevel = INFO
+l2eConv.OutputLevel = INFO
+
+myJetFinder.EDM4hep2LcioTool = e2lConv
+myJetFinder.Lcio2EDM4hepTool = l2eConv
+
 
 # Isolated Lepton Processor
 myIsolatedLeptonTaggingProcessor = MarlinProcessorWrapper("MyIsolatedLeptonTaggingProcessor")
@@ -84,6 +114,35 @@ myIsolatedLeptonTaggingProcessor.Parameters = {
                                                "OutputPFOsWithoutIsoLepCollection": ["PandoraPFOsWithoutIsoLep"],
                                                "UseYokeForMuonID": ["false"]
                                                }
+
+
+edm4hep2LcioConv = EDM4hep2LcioTool("EDM4hep2Lcio")
+lcio2edm4hepConv = Lcio2EDM4hepTool("Lcio2EDM4hep")
+edm4hep2LcioConv.convertAll = False
+edm4hep2LcioConv.collNameMapping = {
+        'PrimaryVertex':'PrimaryVertex',
+        'PandoraPFOs':'PandoraPFOs',
+        "PandoraClusters": "PandoraClusters",
+        "MarlinTrkTracks": "MarlinTrkTracks",
+        "EventHeader": "EventHeader"
+      }
+
+
+lcio2edm4hepConv.convertAll = False
+lcio2edm4hepConv.collNameMapping = {
+     'PandoraPFOs': 'PandoraPFOs',
+     'IsolatedLeptons': 'IsolatedLeptons',
+     'PandoraPFOsWithoutIsoLep': 'PandoraPFOsWithoutIsoLep',
+     "PandoraClusters": "PandoraClusters",
+     "MarlinTrkTracks": "MarlinTrkTracks",
+     "EventHeader": "EventHeader",
+     "MCParticlesSkimmed": "MCParticlesSkimmed",
+     'MyJets': 'MyJets'
+     }
+
+#MyIsolatedLeptonTaggingProcessor.EDM4hep2LcioTool = edm4hep2LcioConv
+MyIsolatedLeptonTaggingProcessor.Lcio2EDM4hepTool = lcio2edm4hepConv
+
 
 
 
