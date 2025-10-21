@@ -29,7 +29,7 @@ def make_converter_pair(name_prefix, edm_map, lcio_map):
 
 
 
-inputFiles = [] #TODO: add input files 
+inputFiles = ["/afs/cern.ch/user/c/chensel/cernbox/ILC/HtoInv/MC/pilot_samples/qqh"] 
 
 # setting up the input
 alg_list = []
