@@ -80,6 +80,7 @@ edm_map_jet = {
     "MarlinTrkTracks": "MarlinTrkTracks",
     "EventHeader": "EventHeader",
     "MCParticlesSkimmed": "MCParticlesSkimmed",
+    "IsolatedLeptons": "IsolatedLeptons"
 }
 
 lcio_map_jet = {
@@ -90,6 +91,7 @@ lcio_map_jet = {
     "MarlinTrkTracks": "MarlinTrkTracks",
     "EventHeader": "EventHeader",
     "MCParticlesSkimmed": "MCParticlesSkimmed",
+    "IsolatedLeptons": "IsolatedLeptons"
 }
 
 # Create and attach converter pair
