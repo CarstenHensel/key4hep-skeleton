@@ -57,6 +57,7 @@ StatusCode SelectEvents::initialize() {
 
   // creat output tree
   tree = new TTree("events", "Higgs to Invisible Analysis Tree");
+  tree->SetDirectory(0);  // This prevents ROOT from automatically deleting it
   this->setupBranches();
 
   // set some global variables
@@ -154,7 +155,7 @@ StatusCode SelectEvents::finalize() {
     tree->Write();
     outFile->Close();
   }
-  
+
   info() << "Before delete - tree pointer: " << tree << endmsg;
   if (tree) {
       info() << "Tree name: " << tree->GetName() << endmsg;
