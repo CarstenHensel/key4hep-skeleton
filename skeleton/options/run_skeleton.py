@@ -42,25 +42,25 @@ io_handler.add_reader(inputFiles)
 
 
 from Configurables import SelectEvents
-myalg = SelectEvents()
-myalg.cross_section = 199.21827
-myalg.n_events_generated = 43200
-myalg.processName = '2f_z_eehiq'
-myalg.processID = 15780
-myalg.targetLumi = 1000.0
-myalg.root_output_file = 'myalg.root'
-myalg.RecoParticleColl = 'PandoraPFOs'
-myalg.IsolatedLeptonsColl = 'IsolatedLeptons'
-myalg.EventHeaderColl = 'EventHeader'
-myalg.MCParticleColl = 'MCParticlesSkimmed'
-myalg.JetFinderColl = 'MyJets'
-myalg.OutputLevel = INFO
+selectEvents = SelectEvents()
+selectEvents.cross_section = 199.21827
+selectEvents.n_events_generated = 43200
+selectEvents.processName = '2f_z_eehiq'
+selectEvents.processID = 15780
+selectEvents.targetLumi = 1000.0
+selectEvents.root_output_file = 'myalg.root'
+selectEvents.RecoParticleColl = 'PandoraPFOs'
+selectEvents.IsolatedLeptonsColl = 'IsolatedLeptons'
+selectEvents.EventHeaderColl = 'EventHeader'
+selectEvents.MCParticleColl = 'MCParticlesSkimmed'
+selectEvents.JetFinderColl = 'MyJets'
+selectEvents.OutputLevel = INFO
 
 
 # adding my jet finder here:
-myJetFinder = MarlinProcessorWrapper("MyJetFinder")
-myJetFinder.ProcessorType = "FastJetProcessor"
-myJetFinder.Parameters = {
+jetFinder = MarlinProcessorWrapper("MyJetFinder")
+jetFinder.ProcessorType = "FastJetProcessor"
+jetFinder.Parameters = {
     "algorithm": ["ValenciaPlugin", "1.2", "1.0", "0.7"],
     "clusteringMode": ["ExclusiveNJets", "2"],
     "jetOut": ["MyJets"],
@@ -69,7 +69,7 @@ myJetFinder.Parameters = {
     "recombinationScheme": ["E_scheme"],
     "storeParticlesInJets": ["true"],
 }
-myJetFinder.OutputLevel = INFO
+jetFinder.OutputLevel = INFO
 
 
 # Define collection mappings for JetFinder
@@ -94,18 +94,18 @@ lcio_map_jet = {
 
 # Create and attach converter pair
 edm2lcio_jet, lcio2edm_jet = make_converter_pair("JetFinder", edm_map_jet, lcio_map_jet)
-myJetFinder.EDM4hep2LcioTool = edm2lcio_jet
-myJetFinder.Lcio2EDM4hepTool = lcio2edm_jet
+jetFinder.EDM4hep2LcioTool = edm2lcio_jet
+jetFinder.Lcio2EDM4hepTool = lcio2edm_jet
 
 
 
 
 
 # Isolated Lepton Processor
-myIsolatedLeptonTaggingProcessor = MarlinProcessorWrapper("MyIsolatedLeptonTaggingProcessor")
-myIsolatedLeptonTaggingProcessor.OutputLevel = INFO
-myIsolatedLeptonTaggingProcessor.ProcessorType = "IsolatedLeptonTaggingProcessor"
-myIsolatedLeptonTaggingProcessor.Parameters = {
+isoLeptonTagger = MarlinProcessorWrapper("MyIsolatedLeptonTaggingProcessor")
+isoLeptonTagger.OutputLevel = INFO
+isoLeptonTagger.ProcessorType = "IsolatedLeptonTaggingProcessor"
+isoLeptonTagger.Parameters = {
                                                "CosConeLarge": ["0.95"],
                                                "CosConeSmall": ["0.98"],
                                                "CutOnTheISOElectronMVA": ["2.0"],
@@ -156,8 +156,8 @@ lcio_map_iso = {
 
 # Create and attach converter pair
 edm2lcio_iso, lcio2edm_iso = make_converter_pair("IsoLeptonTagger", edm_map_iso, lcio_map_iso)
-myIsolatedLeptonTaggingProcessor.Lcio2EDM4hepTool = lcio2edm_iso
-myIsolatedLeptonTaggingProcessor.EDM4hep2LcioTool = edm2lcio_iso   
+isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_iso
+# isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_iso #not needed in case of lcio files   
 
 
 
@@ -167,7 +167,7 @@ monitor.ProcessorType = "Statusmonitor"
 monitor.Parameters = {"HowOften": ["1"], "Verbosity": ["MESSAGE"]}
 
 
-alg_list.extend([myIsolatedLeptonTaggingProcessor, myJetFinder, myalg])
+alg_list.extend([isoLeptonTagger, jetFinder, selectEvents])
 
 io_handler.finalize_converters()
 
