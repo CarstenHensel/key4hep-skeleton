@@ -7,7 +7,7 @@ from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
 
 
-share_converter = False  
+share_converter = True  
 
 
 # -------------------------------------------------------------------------
@@ -20,8 +20,8 @@ def make_converter_pair(name_prefix, edm_map, lcio_map):
     edm.collNameMapping = edm_map
 
     lcio = Lcio2EDM4hepTool(f"LCIO2EDM_{name_prefix}")
-    lcio.convertAll = False
-    lcio.collNameMapping = lcio_map
+    lcio.convertAll = True 
+    #lcio.collNameMapping = lcio_map
 
     return edm, lcio
 

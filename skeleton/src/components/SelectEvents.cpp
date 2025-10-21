@@ -155,6 +155,7 @@ StatusCode SelectEvents::finalize() {
     outFile->Close();
 
     delete outFile;
+    delete tree;
     outFile = nullptr;
     tree = nullptr;
   }
