@@ -1,13 +1,13 @@
 from Gaudi.Configuration import *
-import os
-import sys
-
 
 from Configurables import k4DataSvc
 from Configurables import MarlinProcessorWrapper, EDM4hep2LcioTool, Lcio2EDM4hepTool
 from Configurables import EventDataSvc
 from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
+
+
+share_converter = True
 
 
 # -------------------------------------------------------------------------
@@ -156,8 +156,13 @@ lcio_map_iso = {
 
 # Create and attach converter pair
 edm2lcio_iso, lcio2edm_iso = make_converter_pair("IsoLeptonTagger", edm_map_iso, lcio_map_iso)
-isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_iso
-# isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_iso #not needed in case of lcio files   
+
+if share_converter:
+    isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_jet
+#    isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_jet 
+else:
+    isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_iso
+#    isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_iso #not needed in case of lcio files   
 
 
 
