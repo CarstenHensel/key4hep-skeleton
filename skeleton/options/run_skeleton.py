@@ -7,7 +7,7 @@ from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
 
 
-share_converter = True
+share_converter = False
 
 
 # -------------------------------------------------------------------------
