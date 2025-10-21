@@ -167,7 +167,7 @@ monitor.ProcessorType = "Statusmonitor"
 monitor.Parameters = {"HowOften": ["1"], "Verbosity": ["MESSAGE"]}
 
 
-alg_list.extend([myIsolatedLeptonTaggingProcessor, MyJetFinder, myalg])
+alg_list.extend([myIsolatedLeptonTaggingProcessor, myJetFinder, myalg])
 
 io_handler.finalize_converters()
 
