@@ -8,7 +8,6 @@ from Configurables import MarlinProcessorWrapper, EDM4hep2LcioTool, Lcio2EDM4hep
 from Configurables import EventDataSvc
 from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
-from k4FWCore.parseArgs import parser
 
 
 # -------------------------------------------------------------------------
@@ -29,7 +28,7 @@ def make_converter_pair(name_prefix, edm_map, lcio_map):
 
 
 
-inputFiles = ["/afs/cern.ch/user/c/chensel/cernbox/ILC/HtoInv/MC/pilot_samples/qqh"] 
+inputFiles = ["/afs/cern.ch/user/c/chensel/cernbox/ILC/HtoInv/MC/pilot_samples/qqh/rv02-02.sv02-02.mILD_l5_o1_v02.E250-SetA.I402739.Pqqh_dd.eL.pR.n000_050.d_dst_00015816_1665.slcio"] 
 
 # setting up the input
 alg_list = []
@@ -39,7 +38,7 @@ svc_list = [evt_svc]
 io_svc = IOSvc()
 
 io_handler = IOHandlerHelper(alg_list, io_svc)
-io_handler.add_reader(reco_args.inputFiles)
+io_handler.add_reader(inputFiles)
 
 
 from Configurables import SelectEvents
@@ -49,7 +48,7 @@ myalg.n_events_generated = 43200
 myalg.processName = '2f_z_eehiq'
 myalg.processID = 15780
 myalg.targetLumi = 1000.0
-myalg.root_output_file = myalg.root
+myalg.root_output_file = 'myalg.root'
 myalg.RecoParticleColl = 'PandoraPFOs'
 myalg.IsolatedLeptonsColl = 'IsolatedLeptons'
 myalg.EventHeaderColl = 'EventHeader'
@@ -95,7 +94,7 @@ lcio_map_jet = {
 
 # Create and attach converter pair
 edm2lcio_jet, lcio2edm_jet = make_converter_pair("JetFinder", edm_map_jet, lcio_map_jet)
-myJetsetFinder.EDM4hep2LcioTool = edm2lcio_jet
+myJetFinder.EDM4hep2LcioTool = edm2lcio_jet
 myJetFinder.Lcio2EDM4hepTool = lcio2edm_jet
 
 
@@ -175,7 +174,7 @@ io_handler.finalize_converters()
 from k4FWCore import ApplicationMgr
 ApplicationMgr( TopAlg = alg_list,
                 EvtSel="NONE",
-                EvtMax=3,
+                EvtMax=10,
                 ExtSvc=[evt_svc],
                 OutputLevel=INFO,
                )
