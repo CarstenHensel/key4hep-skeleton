@@ -158,7 +158,7 @@ StatusCode SelectEvents::finalize() {
     outFile = nullptr;
     tree = nullptr;
   }
-
+  info() << "SelectEvents algorithm finished!" << endmsg;
   return StatusCode::SUCCESS;
 }
 

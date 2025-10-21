@@ -7,7 +7,7 @@ from k4FWCore import IOSvc
 from k4MarlinWrapper.io_helpers import IOHandlerHelper
 
 
-share_converter = False
+share_converter = False  
 
 
 # -------------------------------------------------------------------------
@@ -162,10 +162,11 @@ edm2lcio_iso, lcio2edm_iso = make_converter_pair("IsoLeptonTagger", edm_map_iso,
 if share_converter:
     isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_jet
 #    isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_jet 
+    print("-------------> Using shared converters!")
 else:
     isoLeptonTagger.Lcio2EDM4hepTool = lcio2edm_iso
 #    isoLeptonTagger.EDM4hep2LcioTool = edm2lcio_iso #not needed in case of lcio files   
-
+    print("-------------> Using unique converters!")
 
 
 # setting up a dummy processor to avoid global variable issue
