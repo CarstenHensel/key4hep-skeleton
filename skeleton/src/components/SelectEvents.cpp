@@ -156,21 +156,7 @@ StatusCode SelectEvents::finalize() {
     outFile->Close();
   }
 
-  info() << "Before delete - tree pointer: " << tree << endmsg;
-  if (tree) {
-      info() << "Tree name: " << tree->GetName() << endmsg;
-      info() << "Tree entries: " << tree->GetEntries() << endmsg;
-  }
-    
-  if (tree) {
-      delete tree;
-      tree = nullptr;
-      info() << "Tree deleted successfully" << endmsg;
-  } else {
-      info() << "Tree was already null" << endmsg;
-  }
-
-  delete outFile;
+  tree = nullptr;
   outFile = nullptr;
   
   info() << "SelectEvents algorithm finished!" << endmsg;
