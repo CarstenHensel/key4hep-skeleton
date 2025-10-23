@@ -35,10 +35,10 @@
 #include <string>
 #include <vector>
 
-class SelectEvents : public Gaudi::Algorithm {
+class SkeletonAlgorithm : public Gaudi::Algorithm {
 public:
-  explicit SelectEvents(const std::string&, ISvcLocator*);
-  virtual ~SelectEvents();
+  explicit SkeletonAlgorithm(const std::string&, ISvcLocator*);
+  virtual ~SkeletonAlgorithm();
   /**  Initialize.
    *   @return status code
    */

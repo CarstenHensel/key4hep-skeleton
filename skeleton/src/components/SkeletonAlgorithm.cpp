@@ -21,15 +21,15 @@
 #include <vector>
 
 #include "GaudiKernel/MsgStream.h"
-#include "SelectEvents.h"
+#include "SkeletonAlgorithm.h"
 #include "edm4hep/ReconstructedParticle.h"
 #include "edm4hep/Vector3d.h"
 #include "podio/Frame.h"
 #include "podio/UserDataCollection.h"
 
-DECLARE_COMPONENT(SelectEvents)
+DECLARE_COMPONENT(SkeletonAlgorithm)
 
-SelectEvents::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
+SkeletonAlgorithm::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
   declareProperty("RecoParticleColl", m_recoParticleCollHandle, "RecoParticle collection");
   declareProperty("IsolatedLeptonsColl", m_isolatedLeptonsCollHandle, "Isolated Leptons collection");
   declareProperty("EventHeaderColl", m_eventHeaderCollHandle, "Event Header collection");
@@ -46,11 +46,11 @@ SelectEvents::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) : Gau
   declareProperty("root_output_file", root_output_file, "root_output_file");
 }
 
-SelectEvents::~SelectEvents() {
+SkeletonAlgorithm::~SelectEvents() {
   info() << "Running deconstructor." << endmsg;
 }
 
-StatusCode SelectEvents::initialize() {
+StatusCode SkeletonAlgorithm::initialize() {
   m_event_counter = 0;
 
   // set up output file
@@ -70,7 +70,7 @@ StatusCode SelectEvents::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SelectEvents::execute(const EventContext& event) const {
+StatusCode SkeletonAlgorithm::execute(const EventContext& event) const {
 
   // increasing event counter
   m_event_counter += 1;
@@ -152,7 +152,7 @@ StatusCode SelectEvents::execute(const EventContext& event) const {
   return StatusCode::SUCCESS;
 }
 
-StatusCode SelectEvents::finalize() {
+StatusCode SkeletonAlgorithm::finalize() {
   if (outFile && tree) {
     outFile->cd();
     tree->Write();
@@ -161,13 +161,13 @@ StatusCode SelectEvents::finalize() {
   }
 
   
-  info() << "SelectEvents algorithm finished!" << endmsg;
+  info() << "SkeletonAlgorithm algorithm finished!" << endmsg;
   return StatusCode::SUCCESS;
 }
 
 // calculate MET
 std::tuple<double, double, double, double>
-SelectEvents::getMET(const edm4hep::ReconstructedParticleCollection* particles) const {
+SkeletonAlgorithm::getMET(const edm4hep::ReconstructedParticleCollection* particles) const {
   // Usage: auto [MET, MET_px, MET_py, MET_phi] = this->getMET(...)
   // calculate MET
   float sum_px = 0.0f;
@@ -187,8 +187,8 @@ SelectEvents::getMET(const edm4hep::ReconstructedParticleCollection* particles) 
 }
 
 // Function to compute visible kinematics
-SelectEvents::VisibleKinematics
-SelectEvents::computeVisibleKinematics(const edm4hep::ReconstructedParticleCollection* particles) const {
+SkeletonAlgorithm::VisibleKinematics
+SkeletonAlgorithm::computeVisibleKinematics(const edm4hep::ReconstructedParticleCollection* particles) const {
   TLorentzVector total(0, 0, 0, 0);
 
   for (const auto& p : *particles) {
@@ -205,7 +205,7 @@ SelectEvents::computeVisibleKinematics(const edm4hep::ReconstructedParticleColle
 }
 
 // fill lepton variable
-void SelectEvents::fillLeptons(const edm4hep::ReconstructedParticleCollection* particles) const {
+void SkeletonAlgorithm::fillLeptons(const edm4hep::ReconstructedParticleCollection* particles) const {
 
   std::vector<edm4hep::ReconstructedParticle> electrons;
   std::vector<edm4hep::ReconstructedParticle> muons;
@@ -299,7 +299,7 @@ void SelectEvents::fillLeptons(const edm4hep::ReconstructedParticleCollection* p
 }
 
 // fill the jet branches
-void SelectEvents::fillJets(const edm4hep::ReconstructedParticleCollection* jetColl) const {
+void SkeletonAlgorithm::fillJets(const edm4hep::ReconstructedParticleCollection* jetColl) const {
 
   std::vector<edm4hep::ReconstructedParticle> jets;
   for (const auto& j : *jetColl) {
@@ -340,7 +340,7 @@ void SelectEvents::fillJets(const edm4hep::ReconstructedParticleCollection* jetC
 
 // helper methods
 // wrap deltaPhi to [-pi, pi]
-double SelectEvents::getDeltaPhi(double phi1, double phi2) const {
+double SkeletonAlgorithm::getDeltaPhi(double phi1, double phi2) const {
   double dphi = phi1 - phi2;
   while (dphi > M_PI)
     dphi -= 2 * M_PI;
@@ -349,7 +349,7 @@ double SelectEvents::getDeltaPhi(double phi1, double phi2) const {
   return dphi;
 }
 
-double SelectEvents::getDeltaR(const edm4hep::ReconstructedParticle& p1, const edm4hep::ReconstructedParticle& p2) const {
+double SkeletonAlgorithm::getDeltaR(const edm4hep::ReconstructedParticle& p1, const edm4hep::ReconstructedParticle& p2) const {
   // compute pseudorapidities
 
   // another missing functionality:
@@ -372,7 +372,7 @@ double SelectEvents::getDeltaR(const edm4hep::ReconstructedParticle& p1, const e
   return std::sqrt((eta1 - eta2) * (eta1 - eta2) + dphi * dphi);
 }
 
-double SelectEvents::diParticlePt(const edm4hep::ReconstructedParticle& p1,
+double SkeletonAlgorithm::diParticlePt(const edm4hep::ReconstructedParticle& p1,
                                const edm4hep::ReconstructedParticle& p2) const {
   // transverse momentum components
   double px_tot = p1.getMomentum().x + p2.getMomentum().x;
@@ -382,7 +382,7 @@ double SelectEvents::diParticlePt(const edm4hep::ReconstructedParticle& p1,
 }
 
 // set up root tree branches
-void SelectEvents::setupBranches() {
+void SkeletonAlgorithm::setupBranches() {
   tree->Branch("runNumber", &runNumber, "runNumber/I");
   tree->Branch("eventNumber", &eventNumber, "eventNumber/I");
   tree->Branch("lumiWeight", &lumiWeight, "lumiWeight/F");
@@ -447,11 +447,11 @@ void SelectEvents::setupBranches() {
   tree->Branch("mc_motherPdgId", &mc_motherPdgId);
 }
 
-void SelectEvents::addMCParticle(const TLorentzVector& p4, int pdgId, int status, int motherPdgId) const {
+void SkeletonAlgorithm::addMCParticle(const TLorentzVector& p4, int pdgId, int status, int motherPdgId) const {
   addMCParticle(p4.Pt(), p4.Eta(), p4.Phi(), p4.E(), pdgId, status, motherPdgId);
 }
 
-void SelectEvents::addMCParticle(float pt, float eta, float phi, float e, int pdgId, int status, int motherPdgId) const {
+void SkeletonAlgorithm::addMCParticle(float pt, float eta, float phi, float e, int pdgId, int status, int motherPdgId) const {
   mc_pt.push_back(pt);
   mc_eta.push_back(eta);
   mc_phi.push_back(phi);
@@ -462,7 +462,7 @@ void SelectEvents::addMCParticle(float pt, float eta, float phi, float e, int pd
   nMCParticles = mc_pt.size();
 }
 
-void SelectEvents::fillEvent() const {
+void SkeletonAlgorithm::fillEvent() const {
   tree->Fill();
   // Clear MC truth vectors
   mc_pt.clear();
