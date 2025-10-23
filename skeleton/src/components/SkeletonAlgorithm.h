@@ -136,26 +136,26 @@ public:
 
 private:
   // member variable
-  mutable DataHandle<edm4hep::ReconstructedParticleCollection> m_recoParticleCollHandle{
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_recoParticleCollHandle{
       "ReconstructedParticleCollection", Gaudi::DataHandle::Reader, this};
 
-  mutable DataHandle<edm4hep::ReconstructedParticleCollection> m_isolatedLeptonsCollHandle{
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_isolatedLeptonsCollHandle{
       "IsolatedLeptonsCollection", Gaudi::DataHandle::Reader, this};
 
-  mutable DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderCollHandle{"EventHeaderCollection",
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderCollHandle{"EventHeaderCollection",
                                                                              Gaudi::DataHandle::Reader, this};
 
-  mutable DataHandle<edm4hep::MCParticleCollection> m_mcParticleCollHandle{"MCParticleColl", Gaudi::DataHandle::Reader,
+  mutable k4FWCore::DataHandle<edm4hep::MCParticleCollection> m_mcParticleCollHandle{"MCParticleColl", Gaudi::DataHandle::Reader,
                                                                            this};
 
-  mutable DataHandle<edm4hep::ReconstructedParticleCollection> m_jetFinderCollHandle{
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_jetFinderCollHandle{
       "JetFinderColl", // property name (what you set in options)
       Gaudi::DataHandle::Reader, this};
 
-  mutable DataHandle<podio::UserDataCollection<float>> m_outMET{"MET", Gaudi::DataHandle::Writer, this};
+  mutable k4FWCore::DataHandle<podio::UserDataCollection<float>> m_outMET{"MET", Gaudi::DataHandle::Writer, this};
 
   // addiing some code to extract information from the event header
-  mutable DataHandle<edm4hep::EventHeaderCollection> m_eventHeader{"EventHeader", Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeader{"EventHeader", Gaudi::DataHandle::Reader, this};
 
   Gaudi::Property<std::vector<std::string>> m_outputs{this, "Outputs", {}, "Output collection names"};
 

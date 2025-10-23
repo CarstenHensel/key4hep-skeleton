@@ -46,7 +46,9 @@ SelectEvents::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) : Gau
   declareProperty("root_output_file", root_output_file, "root_output_file");
 }
 
-SelectEvents::~SelectEvents() {}
+SelectEvents::~SelectEvents() {
+  info() << "Running deconstructor." << endmsg;
+}
 
 StatusCode SelectEvents::initialize() {
   m_event_counter = 0;
@@ -75,6 +77,7 @@ StatusCode SelectEvents::execute(const EventContext& event) const {
 
   // getting the pointers to the collections I need
   const auto* isoLeptonColl = m_isolatedLeptonsCollHandle.get();
+  (void)isoLeptonColl;  // prevent -Wunused-variable warning TODO: remove when switching to isolated leptons
   const auto* recoColl = m_recoParticleCollHandle.get();
   const auto* eventHeaderColl = m_eventHeaderCollHandle.get();
   const auto* mcParticleColl = m_mcParticleCollHandle.get();
@@ -154,10 +157,9 @@ StatusCode SelectEvents::finalize() {
     outFile->cd();
     tree->Write();
     outFile->Close();
+    delete outFile;
   }
 
-  tree = nullptr;
-  outFile = nullptr;
   
   info() << "SelectEvents algorithm finished!" << endmsg;
   return StatusCode::SUCCESS;
@@ -214,9 +216,9 @@ void SelectEvents::fillLeptons(const edm4hep::ReconstructedParticleCollection* p
     float pt = hypot(p.getMomentum()[0], p.getMomentum()[1]);
     // TODO: double check loose pre-selction
     if (pt > 5.0 && fabs(p.getMomentum()[2] / p.getEnergy()) < 0.98) {
-      if (abs(p.getType()) == 11) {
+      if (abs(p.getPDG()) == 11) {
         electrons.push_back(p);
-      } else if (abs(p.getType()) == 13) {
+      } else if (abs(p.getPDG()) == 13) {
         muons.push_back(p);
       }
     }
