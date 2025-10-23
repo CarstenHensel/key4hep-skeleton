@@ -29,7 +29,7 @@
 
 DECLARE_COMPONENT(SkeletonAlgorithm)
 
-SkeletonAlgorithm::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
+SkeletonAlgorithm::SkeletonAlgorithm(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
   declareProperty("RecoParticleColl", m_recoParticleCollHandle, "RecoParticle collection");
   declareProperty("IsolatedLeptonsColl", m_isolatedLeptonsCollHandle, "Isolated Leptons collection");
   declareProperty("EventHeaderColl", m_eventHeaderCollHandle, "Event Header collection");
@@ -46,7 +46,7 @@ SkeletonAlgorithm::SelectEvents(const std::string& aName, ISvcLocator* aSvcLoc) 
   declareProperty("root_output_file", root_output_file, "root_output_file");
 }
 
-SkeletonAlgorithm::~SelectEvents() {
+SkeletonAlgorithm::~SkeletonAlgorithm() {
   info() << "Running deconstructor." << endmsg;
 }
 

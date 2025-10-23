@@ -41,20 +41,20 @@ io_handler = IOHandlerHelper(alg_list, io_svc)
 io_handler.add_reader(inputFiles)
 
 
-from Configurables import SelectEvents
-selectEvents = SelectEvents()
-selectEvents.cross_section = 199.21827
-selectEvents.n_events_generated = 43200
-selectEvents.processName = '2f_z_eehiq'
-selectEvents.processID = 15780
-selectEvents.targetLumi = 1000.0
-selectEvents.root_output_file = 'myalg.root'
-selectEvents.RecoParticleColl = 'PandoraPFOs'
-selectEvents.IsolatedLeptonsColl = 'IsolatedLeptons'
-selectEvents.EventHeaderColl = 'EventHeader'
-selectEvents.MCParticleColl = 'MCParticlesSkimmed'
-selectEvents.JetFinderColl = 'MyJets'
-selectEvents.OutputLevel = INFO
+from Configurables import SkeletonAlgorithm
+skeletonAlgorithm = SkeletonAlgorithm()
+skeletonAlgorithm.cross_section = 199.21827
+skeletonAlgorithm.n_events_generated = 43200
+skeletonAlgorithm.processName = '2f_z_eehiq'
+skeletonAlgorithm.processID = 15780
+skeletonAlgorithm.targetLumi = 1000.0
+skeletonAlgorithm.root_output_file = 'myalg.root'
+skeletonAlgorithm.RecoParticleColl = 'PandoraPFOs'
+skeletonAlgorithm.IsolatedLeptonsColl = 'IsolatedLeptons'
+skeletonAlgorithm.EventHeaderColl = 'EventHeader'
+skeletonAlgorithm.MCParticleColl = 'MCParticlesSkimmed'
+skeletonAlgorithm.JetFinderColl = 'MyJets'
+skeletonAlgorithm.OutputLevel = INFO
 
 
 # adding my jet finder here:
@@ -175,7 +175,7 @@ monitor.ProcessorType = "Statusmonitor"
 monitor.Parameters = {"HowOften": ["1"], "Verbosity": ["MESSAGE"]}
 
 
-alg_list.extend([isoLeptonTagger, jetFinder, selectEvents])
+alg_list.extend([monitor, isoLeptonTagger, jetFinder, skeletonAlgorithm])
 
 io_handler.finalize_converters()
 
